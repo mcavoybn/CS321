@@ -1,37 +1,70 @@
 package HW1;
 
 import java.util.LinkedList;
+
 public class Cache {
 	
-	int hitCount;
-	int refCount;
-	int curSize;
-	int maxSize;
+	public int l1HitCount;
+	public int l2HitCount;
 	
-	public <E> Cache(int numLevels, int maxSize) {
-		curSize = 0;
-		hitCount = 0;
-		refCount = 0;
-		maxSize = this.maxSize;
-		LinkedList<E> l1 = new LinkedList<E>();
-		LinkedList<E> l2 = new LinkedList<E>();
+	public int l1RefCount;
+	public int l2RefCount;
+	
+	private int l1maxSize;
+	private int l2maxSize;
+	
+	public boolean l2enabled;
+	
+	private LinkedList l1;
+	private LinkedList l2;
+	
+	public <E> Cache(int l1size, int l2size, boolean l2enable) {
+		l1HitCount = 0;
+		l2HitCount = 0;
+		
+		l1RefCount = 0;
+		l2RefCount = 0;
+		
+		l1maxSize = l1size;
+		l2maxSize = l2size;
+		
+		l2enabled = l2enable;
+		l1 = new LinkedList<E>();
+		if(l2enabled) l2 = new LinkedList<E>();
 	}
+	
 	
 	public <E> void addObject(E object) {
-		hitCount++;
+		l1.addFirst(object);
+		if(l2enabled) l2.addFirst(object);
+		if(l1.size() >= l1maxSize) l1.removeLast();
+		if(l2enabled && l2.size() >= l2maxSize) l2.removeLast();
 	}
 
-	public <E> void getObject(E object) {
-		hitCount++;
+	public <E> E getObject(E object) {
+		removeObject(object);
+		addObject(object);
+		return (E)l1.get(0);
 	}
 
 	public <E> void removeObject(E object) {
-		hitCount++;
+		l1RefCount++;
+		if(l1.indexOf(object) != -1) {
+			l1HitCount++;
+			l1.remove(l1.indexOf(object));
+			if(l2enabled) l2.remove(l2.indexOf(object));
+		}else if(l2enabled) {
+			l2RefCount++;
+			if(l2.indexOf(object) != -1) {
+				l2HitCount++;
+				l2.remove(l2.indexOf(object));
+			}
+		}
 	}
 	
 	public <E> void clearCache(E object){
-		hitCount++;
+		l1.clear();
+		if(l2enabled) l2.clear();
 	}
-
+	
 }
-
