@@ -28,9 +28,11 @@ public class Cache <E> {
 
 	public void addObject(E object) {
 		l1.addFirst(object);
-		if(l2enabled) l2.addFirst(object);
 		if(l1.size() >= l1maxSize) l1.removeLast();
-		if(l2enabled && l2.size() >= l2maxSize) l2.removeLast();
+		if(l2enabled) {
+			l2.addFirst(object);
+			if(l2.size() >= l2maxSize) l2.removeLast();
+		}
 	}
 
 	public E getObject(E object) {
