@@ -1,0 +1,12 @@
+only  on right child on heapify down
+
+randomness implementation in process generator
+
+using array vs linkedlist
+
+swapValues vs swapTreeIndicies
+
+problems with dPQueueing from the wrong end of the tree 
+also didnt have timeNotProcessed++ in pqueue update
+
+BinaryTree.java size variable in order to change index sized
