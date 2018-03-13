@@ -1,12 +1,42 @@
-only  on right child on heapify down
+An implementation decision I thought worth mentioning was using an array versus a LinkedList There 
+weren't any constraints given for the size the max heap would need to handle so I just instantiated
+the PQueue with a Process[1000]. I thought that this might increase performance, but its probable
+that LinkedList 's get()/set() functions simply index into an array into the background which
+would mean that using an array in this case decreases the flexibility of the heap. Even so, it
+does do away with the extra memory that function calls like get() would use. If resizing MaxHeap was a
+past 1000 was a concern it could certainly be implemented, however it isn't stated anywhere explicitly.
 
-randomness implementation in process generator
+However, after much consternation I just replaced the array in the tree with a LinkedList. I felt like it 
+was more consistent with the rest of the code and would enable resizing the tree. It also gets rid
+of an extra size variable in the binary tree and therefore the need for incrementing and decrementing
+the size manually when enqueuing and dequeuing values in PQueue. In this process I also made sure to replace
+the public LinkedList/array I was using in the tree and heap with getters and setters for best practice reasons.
+I did have to make the tree in MaxHeap public though for ProcessGenerator though.
 
-using array vs linkedlist
+I spent a silly amount of time thinking about how to implement the probability in the queue function. I thought
+about ways that wouldn't use the Random function, but ultimately decided that even though using a random 
+object might not give an cumulative probability in for a low number of query() calls, overall the experimental 
+probability would approach the right value. So, on each call on queue() a random variable between 1 and 100 
+would be chosen and compared to  the probability*100. This means that given a probability of 0.4,
+the randomly generated integer from 1 to 100 would need to fall between 1 and 40 in order for the queue() function 
+to return a new Probability object.
 
-swapValues vs swapTreeIndicies
+I thought many times about implementing a generic PQuque but decided not to because of the update() function.
+I'm not sure how to go about checking and incrementing the priority levels of the processes 
+generically. I think I would have to create a Process interface, which uses the comparable interface, 
+which then is referenced in the class declaration for pqueue (<E extends Process<E>>). This would completely 
+nullify the reason for implementing a generic PQueue in the first place though. Maybe a type check in the
+update function would work... I'm not going to worry about this though because it wasn't in the spec.
 
-problems with dPQueueing from the wrong end of the tree 
-also didnt have timeNotProcessed++ in pqueue update
+I implemented the O(n) version of the update algorithm, and I think it had an effect on the average process
+time. Previously it would be at a range of 5 - 17 ish. That range went down to about 5 - 8.
+I think this is because the way it bubbles up the whole tree instead of just maxheapifying up on a single 
+branch results in the entire tree being sorted nicer as a result of each update() call. 
 
-BinaryTree.java size variable in order to change index sized
+I just tried replacing the new update algorithm with the old one and it didn't make a difference in the average
+process time... so my above hypothesis is false.
+
+I found the problem with the average process time! When I had changed out the array for a linkedlist in the 
+BinaryTree class, I also had to edit the swap() function in MaxHeap. I made a slight error while revising it 
+which was causing the swap function to just copy the element at index1 into index2. Whoops! Now the
+range for average process time is back to what it should be.

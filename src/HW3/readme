@@ -1,0 +1,23 @@
+I am running into some major issues with this project. The first issue is that for Integers, double hashing function is overflowing the integer class and therefore returning a negative value.
+The next problem seems to be a result of converting the longs to integers screws up the long. So, I tried simply subtracting a large value from the long value and then converting it. This still
+didn't work and the problem is unsolved. There is a similar issue with passing strings to the hash function. The number of probes is so high that it is out of the range [0,2^32 - 1] and is there
+fore showing a negative amount of probes.
+
+Right now, this is what my hash function looks like:
+int hash(E key, int i) {
+		int m = table.length;
+		int k = 1;
+		if(key instanceof String) k = Math.abs(key.hashCode());
+		if(key instanceof Integer) k = ((Integer) key).intValue();
+		if(key instanceof Long) k = ((Long)((long)key - 1520400000000L)).intValue();
+		if(hashType == 0) {			
+			return ((k % m) + i) % m;
+		}
+		if(hashType == 1) {
+			return ((k % m) + i*(1 + (k % (m-2))) ) % m;
+		}		
+		return -1;		
+}
+I feel like this is correct. I have tried different conversions for the int value and the Long as well. Each one yielded similar results. The only thing I can think of now
+is that something in my insert() function is off, or this is the intended behaviour of the hash function for this project. I tried replacing the hash function above with
+simply using the hashCode() function for whatever type of key is passed, and the results were more similar to the results from my hash function than I imagined they would be.

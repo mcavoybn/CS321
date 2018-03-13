@@ -1,0 +1,22 @@
+Ben McAvoy CS321 - HW1: Cache
+
+This project was a good chance to get re acquainted with Java and eclipse. One of the most
+difficult parts at first was implementing the generic typing in the Cache class. I also
+struggled with some basic stuff like how the constructor works and variable scope.
+
+Once I got a handle on Java I built out the Cache class and started testing it. My first
+implementation had separate logic for each individual function, and was working properly
+but was outputting a cache hit ratio which was greater than 1. I slept on it and when I came
+back realized that much of the logic was being duplicated between each function. That's
+when I revised the Cache class to it's current state where all the logic is in the removeObject()
+and addObject() functions, and the getObject() function simply calls removeObject then 
+addObject. 
+
+After this, I went to class and was told to switch out the Scanner class for a BufferedInputReader()
+so I implemented that. It definitely increased the performance from before from taking ~45 seconds to 
+~5 seconds. Also, I wanted to point out the weird assignment within the while loop on line 34. I found 
+this in a StackOverflow answer which was a basic implementation of BufferedReader(). At first I tried to 
+get rid of it, and change it so that (String line) is assigned outside of the while loop. However, this
+didn't work so I changed the while loop to its do-while form. But this still threw an exception so I 
+changed it back to it's original form where the line variable is assigned within the while condition.
+I'm not sure this is considered bad practice, but if it's not I will definitely use it again.

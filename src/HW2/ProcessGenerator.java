@@ -12,7 +12,7 @@ public class ProcessGenerator {
 	}
 	
 	public boolean query() {
-		if(rand.nextInt(100) + 1 <= (int)probability*100) {
+		if(rand.nextInt(100) + 1 <= probability*100) {
 			return true;
 		}
 		return false;
@@ -23,6 +23,7 @@ public class ProcessGenerator {
 		int randomPriorityLevel = rand.nextInt(maxLevel) + 1;
 		return new Process(currentTime, randomTimeRemaining, randomPriorityLevel);
 	}
+	
 }
 	
 	
